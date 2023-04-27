@@ -60,7 +60,7 @@ git submodule update --init
 sudo ./quark_setup.sh
 ```
 
-Note if you got the similar error as following during comilation, please add `#![feature(generic_associated_types)]` to  `/root/.cargo/registry/src/github.com-1ecc6299db9ec823/spki-0.7.0/src/lib.rs`, or other similar location.
+Note if you got a similar error as the following during comilation, this error is caused by tje mismatch between nightly rust compiler and subdepedency requred by quark, so  please add `#![feature(generic_associated_types)]` to  `/root/.cargo/registry/src/github.com-1ecc6299db9ec823/spki-0.7.0/src/lib.rs`, or other similar location.
 ```
 error[E0658]: generic associated types are unstable
    --> /root/.cargo/registry/src/github.com-1ecc6299db9ec823/spki-0.7.0/src/algorithm.rs:183:9
@@ -106,7 +106,6 @@ In my case, the IP is `10.206.133.76`. By default, KBS is running on port 8000.
 
 
 ### 2.6 Add quark as a Runtime Resource to K8S
-
 ```
 cat <<EOF | kubectl apply -f -
 apiVersion: node.k8s.io/v1
@@ -116,6 +115,60 @@ metadata:
 handler: quark
 EOF
 ```
+
+
+## 3.Run Programe
+### 3.1 Start KBS
+```
+cd Quark-demo/kbs
+sudo ./target/debug/kbs --socket 0.0.0.0:8000 --certificate ./cert.pem --private-key ./nopass.pem --insecure-api
+```
+
+
+### 3.2 Deploy Workload
+
+For now, 2 sample workloads are provided:  `mongodb` and `get_attestation_report_syscall_test`
+```
+kubectl apply -f mongo.yaml
+kubectl apply -f syscall_test.yaml
+```
+
+The `default backend policy` used by enclave  is stored in `secret/policy`, and deployed to kbs' local storage using script `./install_secret.sh` in step `2.3`
+
+
+### Play with `Secure Client`
+Copy `reference frontend policy` to `Quark-demo/Trusted_Client/target/debug/`
+```
+cd Quark-demo/Trusted_Client/target/debug/
+cp ../../reference_policy.json policy.json
+```
+
+Test functionality of Secure client
+```
+yaoxin@yaoxin-MS-7B48:~/Quark-demo/Trusted_Client/target/debug$ ./secure-client 
+A fictional versioning CLI
+
+Usage: secure-client <COMMAND>
+
+Commands:
+  prepare-policy  Convert the frontend policy to the (backend) policy used by qkernel. Default file path is current dir
+  terminal        Allocate a terminal inside a container. This terminal is cross platform runable
+  issue-cmd       Issue cmd to a container Example: ./secure-client issue-cmd nginx "ls -t /var"
+  get             Get resource from cluster (in default namespace)
+  edit            Edit a resource
+  delete          Delete a resource
+  watch           Watches a Kubernetes Resource for changes continuously
+  apply           Apply a configuration to a resource by file name
+  logs            Get logs of the first container in Pod, Logs CMD works only if the container log is encrypted
+  policy-update   Update Exec policy using secure channel
+  help            Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help  Print help
+```
+
+
+
 
 
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e 
 # example of using arguments to a script
 mkdir -p resource
 mkdir -p /opt/confidential-containers/kbs/repository/quark_mongo
