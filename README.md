@@ -169,8 +169,9 @@ Options:
 
 
 
+# Limitation
 
-
+Each pod only supports 1 container 
 
 
 
