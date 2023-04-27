@@ -136,7 +136,7 @@ kubectl apply -f syscall_test.yaml
 The `default backend policy` used by enclave  is stored in `secret/policy`, and deployed to kbs' local storage using script `./install_secret.sh` in step `2.3`
 
 
-### Play with `Secure Client`
+3.3 ### Play with `Secure Client`
 Copy `reference frontend policy` to `Quark-demo/Trusted_Client/target/debug/`
 ```
 cd Quark-demo/Trusted_Client/target/debug/
