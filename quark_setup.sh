@@ -1,15 +1,18 @@
 #!/bin/bash
 
 # This script is used to set up compilation enviroment for confidential quark
+set -e 
+export rustup=/home/yaoxin/.cargo/bin/rustup
+export cargo=/home/yaoxin/.cargo/bin/cargo
 
 function setup_compilation_env_for_quark {
-    rustup toolchain install nightly-2022-08-11-x86_64-unknown-linux-gnu
-    rustup default nightly-2022-08-11-x86_64-unknown-linux-gnu
-    cargo install cargo-xbuild
+    $rustup toolchain install nightly-2022-08-11-x86_64-unknown-linux-gnu
+    $rustup default nightly-2022-08-11-x86_64-unknown-linux-gnu
+    $cargo install cargo-xbuild
     sudo apt-get install libcap-dev
     sudo apt-get install build-essential cmake gcc libudev-dev libnl-3-dev libnl-route-3-dev ninja-build pkg-config valgrind python3-dev cython3 python3-docutils pandoc libclang-dev
-    rustup component add rust-src
-    sudo mkdir /var/log/quark
+    $rustup component add rust-src
+    sudo mkdir -p /var/log/quark
 
     cat <<EOF | sudo tee /etc/containerd/config.toml
 version = 2
@@ -25,45 +28,40 @@ EOF
 }
 
 function compile_quark {
+    echo "compile_quark"
     setup_compilation_env_for_quark
 
-    push master-thesis-quark 
+    pushd master-thesis-quark 
 
-    make clean
-    make
-    make install
+    pushd qvisor
+    RUSTFLAGS="--cfg aes_force_soft --cfg polyval_force_soft" CARGO_TARGET_DIR=../target $cargo build --release
+    popd
 
-    pop
+    pushd qkernel
+    RUSTFLAGS="--cfg aes_force_soft --cfg polyval_force_soft --cfg log" CARGO_TARGET_DIR=../target $cargo xbuild --target x86_64-qkernel.json --release --verbose
+    popd
+
+    popd
 }
 
 function compile_kbs {
-    push kbs
+    echo "compile_kbs"
+    pushd kbs
 
     wget https://go.dev/dl/go1.20.1.linux-amd64.tar.gz
     sudo tar -C /usr/local -xzf go1.20.1.linux-amd64.tar.gz
     export PATH="/usr/local/go/bin:${PATH}"
-    make kbs
-
-    push secret
-
-    sudo chmod +7 install_secrets.sh
-    exec ./install_secrets.sh
-
-    pop
-
-    pop
+    $cargo build
+    popd
 }
 
 function compile_secure_client {
-    push Trusted_Client
-
-    cargo build
-
-    pop
+    echo "compile_secure_client"
+    pushd Trusted_Client
+    $cargo build
+    popd
 }
 
 compile_quark
-
-compile_kbs
-
 compile_secure_client
+compile_kbs
