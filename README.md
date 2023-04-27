@@ -99,7 +99,7 @@ handler: quark
 EOF
 ```
 
-### 2.5 Modify `SECRET_MANAGER_IP` specified in `mongi.yaml` and `syscall_test.yaml`
+### 2.5 Modify `SECRET_MANAGER_IP` specified in `mongo.yaml` and `syscall_test.yaml`
 Normally the SECRET_MANAGER_IP is the IP of your workstation. Enclave uses this ip to communicate with the KBS
 
 In my case, the IP is `10.206.133.76`. By default, KBS is running on port 8000.
