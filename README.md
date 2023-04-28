@@ -52,6 +52,8 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ###  2.1 Clone
 ```
 git clone https://github.com/yaoxin1995/Quark-demo.git
+cd Quark-demo
+git submodule update --init --recursive --remote
 git submodule update --init
 ```
 
