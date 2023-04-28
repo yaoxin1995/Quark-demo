@@ -137,7 +137,57 @@ kubectl apply -f syscall_test.yaml
 
 The `default backend policy` used by enclave  is stored in `secret/policy`, and deployed to kbs' local storage using script `./install_secret.sh` in step `2.3`
 
+Here is a snapshot of the `default frontend policy` (note, enclave only accept policy in backend format, please use the security client's "prepare-policy" cmd to convert the "front-end blocking policy" to a "back-end blocking policy"):
 
+
+```
+{
+    "enable_policy_updata": true,
+    "privileged_user_config" :{
+        "enable_terminal": true,
+        "enable_single_shot_command_line_mode": true,
+        "single_shot_command_line_mode_configs" : {
+            "allowed_cmd": ["cat", "ls", "cd", "mkdir"],
+            "allowed_dir": ["/var"]
+        },
+        "exec_result_encryption":true,
+        "enable_container_logs_encryption":true
+    },
+
+    "unprivileged_user_config" :{
+        "enable_terminal": true,
+        "enable_single_shot_command_line_mode": true,
+        "single_shot_command_line_mode_configs" : {
+            "allowed_cmd": ["ls"],
+            "allowed_dir": ["/var/log"]
+        }
+    },
+
+    "privileged_user_key_slice": "a very simple secret key to use!",
+
+    "qkernel_log_config": {
+        "enable": true,
+        "allowed_max_log_level": "Debug"
+    },
+    
+    "syscall_interceptor_config": {
+        "enable": false,
+        "mode":  "Global",
+        "default_action": "ScmpActErrno",
+        "syscalls": [
+           "sys_read",
+            ...
+            "sys_set_mempolicy_home_node",
+            "sys_attestation_report",
+            "sys_socket_produce",
+            "sys_socket_consume",
+            "sys_proxy"
+          ]
+    }
+}
+
+```
+We will explain the shield policy file in `section 4`
 ### 3.3 Play with `Secure Client`
 Copy `reference frontend policy` to `Quark-demo/Trusted_Client/target/debug/`
 ```
