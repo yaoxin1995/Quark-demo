@@ -221,7 +221,92 @@ Options:
 
 
 
-# Limitation
+
+## 4. Enclave Shield Policy explained
+
+
+### 4.1 enable_policy_updata
+
+This option allows the data owner to decide whether to allow the enclave shield policy to be updated during enclave running
+
+### 4.2 privileged_user_config
+```
+    "privileged_user_config" :{
+        "enable_terminal": true,
+        "enable_single_shot_command_line_mode": true,
+        "single_shot_command_line_mode_configs" : {
+            "allowed_cmd": ["cat", "ls", "cd", "mkdir"],
+            "allowed_dir": ["/var"]
+        },
+        "exec_result_encryption":true,
+        "enable_container_logs_encryption":true
+    },
+```
++ enable_terminal: This option allows the data owner to decide whether to allow the termianl to be allocated using secure client during enclave running
++ enable_single_shot_command_line_mode: This option allows the data owner to decide whether to allow the privileged user to issue single cmd to enclave using secure client
++ single_shot_command_line_mode_configs: the config spcecify what cmds and in which dirs these cmds can be executed by privileged users
++ exec_result_encryption: By default, the result of user issued cmd is return with the help of mutiple untrusted component, like containerd. If this option is enabled, enclave will do encryption and integrity protection for the resutl. 
++ enable_container_logs_encryption: This option allows the data owner to decide whether the container logs should be cryptographically protected
++ 
+### 4.3 unprivileged_user_config
+The non-privileged user configuration allows the data owner to control the behavior of non-privileged level users. Non-privileged users here refer to cloud operators, cluster administrators, etc. who use kubeclt to interact with pods
+```
+    "unprivileged_user_config" :{
+        "enable_terminal": true,
+        "enable_single_shot_command_line_mode": true,
+        "single_shot_command_line_mode_configs" : {
+            "allowed_cmd": ["ls"],
+            "allowed_dir": ["/var/log"]
+        }
+    },
+```
+### 4.4 privileged_user_key_slice
+
+This is the shared secret used to establish a secure channel between the secure client and the enclave.
+
+### 4.5 qkernel_log_config
+
+Quark usually prints debugging information of guest（qkernel） and host (qvisor) to the local machine's `/var/log/quark` directory.
+This configuration allows the enclave owner to determine what level of debug information the enclave will print.
+
+There are 5 possible value of "DebugLevel" as below. If `Off` is choosen, no guest（qkernel）debug messages will be printed
+```
+Off,
+Error,
+Warn,
+Info,
+Debug,
+Trace,
+```
+
+### 4.6 syscall_interceptor_config
+
+The syscall_interceptor config allow enclave owner to specify which guest system calls are allowed.
+
+Currently syscall interceptor support 2 mode: 
++ `Global` : the inteceptor works for all system calls 
++ `ContextBased`: the inteceptor works only for the system calls issued by application process
+
+`syscalls` spcecify the allowed systems, Note that `syscalls` LIST cannot not be live updated, because the size of this list exceeds the maximum size of messages that can be transmitted in the secure channel.
+
+```
+    "syscall_interceptor_config": {
+        "enable": false,
+        "mode":  "Global",
+        "default_action": "ScmpActErrno",
+        "syscalls": [
+           "sys_read",
+            ...
+            "sys_set_mempolicy_home_node",
+            "sys_attestation_report",
+            "sys_socket_produce",
+            "sys_socket_consume",
+            "sys_proxy"
+          ]
+    }
+```
+
+# 5. Limitation
 
 Each pod only supports 1 container 
 
