@@ -135,9 +135,9 @@ kubectl apply -f mongo.yaml
 kubectl apply -f syscall_test.yaml
 ```
 
-The `default backend policy` used by enclave  is stored in `secret/policy`, and deployed to kbs' local storage using script `./install_secret.sh` in step `2.3`
+The `default backend shield policy` used by enclave  is stored in `secret/policy`, and deployed to kbs' local storage using script `./install_secret.sh` in step `2.3`
 
-Here is a snapshot of the `default frontend policy` (note, enclave only accept policy in backend format, please use the security client's "prepare-policy" cmd to convert the "front-end blocking policy" to a "back-end blocking policy"):
+Here is a snapshot of the `default frontend policy` (note, enclave only accept policy in backend format, please use the security client's "prepare-policy" cmd to convert the "front-end shield policy" to a "back-end shield policy"):
 
 
 ```
