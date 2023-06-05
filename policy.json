@@ -1,6 +1,6 @@
 
 {
-    "enclave_mode": "Development",
+    "enclave_mode": "Production",
     "enable_policy_updata": true,
     "privileged_user_config" :{
         "enable_terminal": true,
@@ -26,7 +26,7 @@
 
     "qkernel_log_config": {
         "enable": true,
-        "allowed_max_log_level": "Debug"
+        "allowed_max_log_level": "Off"
     },
 
     "app_launch_ref_measurement":"oZcFntkdXwYWgJnU4njBLdF1NAYt65NFz34pILOxCBb2KfGJvnAZEGqPnW5Gtf+JWN2ee7peAHxhi2OAI3tU1g==",
