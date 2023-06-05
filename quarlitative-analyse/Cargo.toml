@@ -1,0 +1,9 @@
+[package]
+name = "qualitative-any"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+syscalls = {git = "https://github.com/yaoxin1995/syscalls.git"}
