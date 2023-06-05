@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-cquark
+spec:
+  runtimeClassName: quark
+  containers:
+  - name: mirco
+    image: busybox
+    stdin: true 
+    tty: true  
+    env:
+    - name: APPLICATION_NAME
+      value: "sh"
+    - name: SECRET_MANAGER_IP
+      value: "10.221.117.198:8000"
+    - name: SHILED_POLICY_PATH
+      value: "quark_nginx/nginx_resource/policy"
+    - name: FILE_BASED_SECRETS_PATH
+      value: "quark_mongo/mongo_resource/rootCaPem"

@@ -5,7 +5,7 @@
 [submodule "master-thesis-quark"]
 	path = master-thesis-quark
 	url = https://github.com/yaoxin1995/master-thesis-quark.git
-	branch=master-thesis
+	branch=working
 [submodule "kbs"]
 	path = kbs
 	url = https://github.com/yaoxin1995/kbs.git

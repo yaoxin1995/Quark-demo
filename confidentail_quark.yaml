@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: micro-cquark
+spec:
+  runtimeClassName: quark
+  containers:
+  - name: mirco
+    image: yaoxinjing/qualitative_analyse:latest
+    stdin: true 
+    tty: true  
+    env:
+    - name: APPLICATION_NAME
+      value: "qualitative-any"
+    - name: SECRET_MANAGER_IP
+      value: "10.221.117.198:8000"
+    - name: CMD_ENV_BASED_SECRETS_PATH
+      value: "quark_nginx/nginx_resource/envCmd"
+    - name: SHILED_POLICY_PATH
+      value: "quark_nginx/nginx_resource/policy"
+    - name: FILE_BASED_SECRETS_PATH
+      value: "quark_mongo/mongo_resource/rootCaPem"  
