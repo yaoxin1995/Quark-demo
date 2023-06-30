@@ -5,7 +5,7 @@ use std::fs::File;
 use std::path::Path;
 use std::os::unix::io::AsRawFd; 
 
-static NUMBERS: &'static [i32] = &[10;10000];
+static NUMBERS: &'static [i32] = &[10;1000];
 
 fn main() {
     let path = Path::new("/secret/root-ca.pem");
