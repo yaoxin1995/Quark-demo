@@ -1,0 +1,10 @@
+{
+    "env_variables" : [
+        "FOO=Foo managed by KBS"
+    ],
+    "cmd_arg": [
+        "confidentail_cmd_secret1",
+        "confidentail_cmd_secret2",
+        "confidentail_cmd_secret3"
+    ]
+}
