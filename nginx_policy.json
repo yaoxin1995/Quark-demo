@@ -3,23 +3,16 @@
     "enclave_mode": "Production",
     "enable_policy_updata": false,
     "privileged_user_config" :{
-        "enable_terminal": true,
-        "enable_single_shot_command_line_mode": true,
-        "single_shot_command_line_mode_configs" : {
-            "allowed_cmd": ["cat", "ls"],
-            "allowed_dir": ["/var"]
-        },
-        "exec_result_encryption":true,
-        "enable_container_logs_encryption":true
+        "allowed_cmd": ["cat", "ls", "/bin/sh"],
+        "allowed_dir": ["/var"],
+        "no_interactive_process_stdout_err_encryption":true,
+        "interactive_porcess_stdout_err_encryption":true
     },
 
     "unprivileged_user_config" :{
-        "enable_terminal": false,
-        "enable_single_shot_command_line_mode": true,
-        "single_shot_command_line_mode_configs" : {
-            "allowed_cmd": ["ls"],
-            "allowed_dir": ["/var/log"]
-        }
+        "allowed_cmd": ["ls","/bin/sh"],
+        "allowed_dir": ["/var/log"]
+        
     },
 
     "privileged_user_key_slice": "a very simple secret key to use!",
@@ -42,7 +35,6 @@
             "binary_name": "/lib/x86_64-linux-gnu/libgcc_s.so.1",
              "reference_measurement":  "d3CMidyo4YYUdzT8dxuDN/qFYiE6FeRwEbELwNZrb1GEuKGHnK6oWa3o+XkCNsunqZmdDCxhWBOPkkHMX3r26g=="
         },
-
 
         {
             "binary_name": "/lib/x86_64-linux-gnu/libpthread-2.31.so",
